@@ -18,16 +18,9 @@ const int _BACKLOG = 5;
 const int _MAX_BUFF_SIZE = 100; //in bytes
 
 
-//following function taken from: https://beej.us/guide/bgnet/html/#platform-and-compiler
-void *get_in_addr(struct sockaddr *sa)
-{
-	if(sa->sa_family == AF_INET)
-	{
-		return &(((struct sockaddr_in *)sa)->sin_addr);
-	}
-	return &(((struct sockaddr_in6 *)sa)->sin6_addr);
-}
 
+//helper function handles IPV4 and IPV6
+void *inAddr(struct sockaddr *sckAdd);
 
 int main(int argc, char** argv)
 {
@@ -112,19 +105,20 @@ int main(int argc, char** argv)
 		}
 		//display ip connection
 		char s[INET6_ADDRSTRLEN];
-		inet_ntop(incAddr.ss_family, get_in_addr((struct sockaddr *) &incAddr), s, sizeof s);
+		inet_ntop(incAddr.ss_family, inAddr((struct sockaddr *) &incAddr), s, sizeof s);
 		printf("Server received connection from %s\n", s);
 
 
-		if (!fork()) { // this is the child process
-            close(socketFD); // child doesn't need the listener
-            string sS = "Thanks for connecting to SERVER!\n";
-			if (send(incSockFD, sS.c_str(), sizeof sS, 0) == -1)
-                perror("send");
-            close(incSockFD);
-            exit(0);
-        }
-        close(incSockFD);  // parent doesn't need this
+		if (!fork()) 
+		{ // this is the child process
+            		close(socketFD); // child doesn't need the listener
+            		string sS = "Thanks for connecting to SERVER!\n";
+				if (send(incSockFD, sS.c_str(), sizeof sS, 0) == -1)
+                			perror("send");
+            		close(incSockFD);
+            		exit(0);
+        	}
+        	close(incSockFD);  // parent doesn't need this
 		count++;
 	}
 
@@ -133,4 +127,13 @@ int main(int argc, char** argv)
 
 
 	return 0;
+}
+
+void *inAddr(struct sockaddr *sckAdd)
+{
+	if(sckAdd->sa_family == AF_INET)
+    {
+        return &(((struct sockaddr_in *)sckAdd)->sin_addr);
+    }
+    return &(((struct sockaddr_in6 *)sckAdd)->sin6_addr);
 }
