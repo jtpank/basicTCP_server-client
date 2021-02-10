@@ -3,10 +3,18 @@ Wrote a program to pass input & output over a TCP socket. The client program ope
 In this barebones model: The server will deliver the message for up to 3 connections and the client will display the received message.
 
 How To:
+<br></br>
 echo "# d" >> README.md
+<br></br>
 git init
+<br></br>
 git add README.md
+<br></br>
 git commit -m "first commit"
+<br></br>
 git branch -M main
+<br></br>
 git remote add origin https://github.com/jtpank/<nameofrepo.git>
+<br></br>
 git push -u origin main
+<br></br>
